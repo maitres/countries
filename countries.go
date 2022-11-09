@@ -5383,7 +5383,7 @@ func ByName(name string) CountryCode { //nolint:misspell,gocyclo
 		return CAF
 	case "TD", "TCD", "CHAD", "TSCHAD":
 		return TCD
-	case "CZ", "CZE",  "CZECHIA", "CZECHIYA", "CZECHREPUBLIC", "REPUBLICOFCZECH", "CZECH", "TSCHECHIEN", "CHEHIA", "CHEHIYA":
+	case "CZ", "CZE", "CZECHIA", "CZECHIYA", "CZECHREPUBLIC", "REPUBLICOFCZECH", "CZECH", "TSCHECHIEN", "CHEHIA", "CHEHIYA":
 		return CZE
 	case "CL", "CHL", "RCH", "CHILE":
 		return CHL
@@ -5479,4 +5479,17 @@ func ByNumeric(numeric int) CountryCode {
 // IsValid - returns true, if code is correct
 func (c CountryCode) IsValid() bool {
 	return c.Alpha2() != UnknownMsg
+}
+
+// MarshalJSON - marshal country code to string
+func (c CountryCode) MarshalJSON() ([]byte, error) {
+	name := c.String()
+	return json.Marshal(&name)
+}
+
+// UnmarshalJSON - unmarshal country code from string
+func (c *CountryCode) UnmarshalJSON(data []byte) error {
+	country := ByName(string(data))
+	*c = country
+	return nil
 }

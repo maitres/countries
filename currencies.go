@@ -2004,3 +2004,16 @@ func CurrencyCodeByName(name string) CurrencyCode { //nolint:gocyclo
 	}
 	return CurrencyUnknown
 }
+
+// MarshalJSON - marshal country code to string
+func (c CurrencyCode) MarshalJSON() ([]byte, error) {
+	name := c.String()
+	return json.Marshal(&name)
+}
+
+// UnmarshalJSON - unmarshal country code from string
+func (c *CurrencyCode) UnmarshalJSON(data []byte) error {
+	currency := CurrencyCodeByName(string(data))
+	*c = currency
+	return nil
+}
